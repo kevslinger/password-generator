@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Password Generator</title>
+        <style>
+            h3 {
+            word-wrap: break-word;
+            }
+        </style>
+    </head>
+<body>
+    <h1>Hi Swisscom team! Welcome to my password generator</h1>
+    <h3>By Kevin Esslinger</h3>
+
+    <p>
+        To generate a password, click the "Generate Password" button below.
+
+    </p>
+
+    <form id="generatePasswordButton" action="/generate" method="GET">
+
+        <label for="lengthSlider">Password Length</label> 
+        <input type="range" min="1" max="200" value={{ default_length }} class="slider" id="lengthSlider" name="length">
+        
+        {% if default_numbers %}
+            <input type="checkbox" id="numberFlag" name="numbers" checked>
+        {% else %}
+            <input type="checkbox" id="numberFlag" name="numbers">
+        {% endif %}
+        <label for="numberFlag">Numbers?</label>
+
+        {% if default_lowercase %}
+            <input type="checkbox" id="lowercaseFlag" name="lowercase" checked>
+        {% else %}
+            <input type="checkbox" id="lowercaseFlag" name="lowercase">
+        {% endif %}
+        <label for="lowercaseFlag">Lowercase?</label>
+
+        {% if default_uppercase %}
+            <input type="checkbox" id="uppercaseFlag" name="uppercase" checked>
+        {% else %}
+            <input type="checkbox" id="uppercaseFlag" name="uppercase">
+        {% endif %}
+        <label for="uppercaseFlag">Uppercase?</label>
+
+        {% if default_symbols %}
+        <input type="checkbox" id="symbolFlag" name="symbols" checked>
+        {% else %}
+        <input type="checkbox" id="symbolFlag" name="symbols">
+        {% endif %}
+        <label for="symbolFlag">Symbols?</label><br>
+
+        <input type="submit" id="generatePasswordButton" name ="generatePasswordButton">
+        <label for="generatePasswordButton">Generate Password</label>
+    </form>
+
+    <h3>Your Password: {{ password }}</h3>
+</body>
+
+</html>
+
+
+
+
+  
