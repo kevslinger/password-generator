@@ -1,57 +1,59 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Password Generator</title>
-        <style>
-            h3 {
-            word-wrap: break-word;
-            }
-        </style>
-    </head>
-<body>
-    <h1>Hi Swisscom team! Welcome to my password generator</h1>
-    <h3>By Kevin Esslinger</h3>
-    <p>
-        To generate a password, click the "Generate Password" button below.
-    </p>
-    <form id="generatePasswordButton" action="/generate" method="GET">
-
-        <label for="lengthSlider">Password Length</label> 
-        <input type="range" min="1" max="200" value={{ default_length }} class="slider" id="lengthSlider" name="length">
-        
-        {% if default_numbers %}
-            <input type="checkbox" id="numberFlag" name="numbers" checked>
-        {% else %}
-            <input type="checkbox" id="numberFlag" name="numbers">
-        {% endif %}
-        <label for="numberFlag">Numbers?</label>
-
-        {% if default_lowercase %}
-            <input type="checkbox" id="lowercaseFlag" name="lowercase" checked>
-        {% else %}
-            <input type="checkbox" id="lowercaseFlag" name="lowercase">
-        {% endif %}
-        <label for="lowercaseFlag">Lowercase?</label>
-
-        {% if default_uppercase %}
-            <input type="checkbox" id="uppercaseFlag" name="uppercase" checked>
-        {% else %}
-            <input type="checkbox" id="uppercaseFlag" name="uppercase">
-        {% endif %}
-        <label for="uppercaseFlag">Uppercase?</label>
-
-        {% if default_symbols %}
-        <input type="checkbox" id="symbolFlag" name="symbols" checked>
-        {% else %}
-        <input type="checkbox" id="symbolFlag" name="symbols">
-        {% endif %}
-        <label for="symbolFlag">Symbols?</label><br>
-
-        <input type="submit" id="generatePasswordButton" name ="generatePasswordButton" value="Generate Password">
-    </form>
-
-    <h3>Your Password: {{ password }}</h3>
-</body>
+   <head>
+      <meta charset="utf-8">
+      <title>Password Generator</title>
+   </head>
+   <body>
+      <h1>Hi Swisscom team! Welcome to my password generator</h1>
+      <h3>By Kevin Esslinger</h3>
+      <p>
+         To generate a password, click the "Generate Password" button below.
+         <br>
+         Feel free to modify the Password Length slider to change the generated password's length.
+         <br>
+         The Lowercase, Uppercase, Numbers, and Symbols checkboxes toggle whether those chracters should be considered in the password. 
+      </p>
+      <form id="generatePasswordButton" action="/generate" method="GET">
+         <!-- Slider to change the length of the password -->
+         <label for="lengthSlider">Password Length:</label> 
+         <output id="sliderValue">{{ default_length }}</output>
+         <input type="range" name="length" id="lengthSlider" min="1" max="200" value={{ default_length }} class="slider" oninput="sliderValue.value = lengthSlider.value">
+         
+         <!-- Checkbox to set whether or not to include lowercase letters -->
+         {% if default_lowercase %}
+         <input type="checkbox" id="lowercaseFlag" name="lowercase" checked>
+         {% else %}
+         <input type="checkbox" id="lowercaseFlag" name="lowercase">
+         {% endif %}
+         <label for="lowercaseFlag">Lowercase?</label>
+         <!-- Checkbox to set whether or not to include uppercase letters -->
+         {% if default_uppercase %}
+         <input type="checkbox" id="uppercaseFlag" name="uppercase" checked>
+         {% else %}
+         <input type="checkbox" id="uppercaseFlag" name="uppercase">
+         {% endif %}
+         <label for="uppercaseFlag">Uppercase?</label>
+         <!-- Checkbox to set whether or not to include numbers -->
+         {% if default_numbers %}
+         <input type="checkbox" id="numberFlag" name="numbers" checked>
+         {% else %}
+         <input type="checkbox" id="numberFlag" name="numbers">
+         {% endif %}
+         <label for="numberFlag">Numbers?</label>
+         <!-- Checkbox to set whether or not to include symbols -->
+         {% if default_symbols %}
+         <input type="checkbox" id="symbolFlag" name="symbols" checked>
+         {% else %}
+         <input type="checkbox" id="symbolFlag" name="symbols">
+         {% endif %}
+         <label for="symbolFlag">Symbols?</label><br>
+         <!-- Button to send a GET request and generate a password -->
+         <input type="submit" id="generatePasswordButton" name ="generatePasswordButton" value="Generate Password">
+      </form>
+      <h3 style="word-wrap:break-word;">Your Password: {{ password }}</h3>
+      {% if error %}
+      <b style="color:red;">{{ error }}</b>
+      {% endif %}
+   </body>
 </html>
-  
