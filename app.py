@@ -1,16 +1,11 @@
 import argparse
 from flask import Flask, render_template, request
 from waitress import serve
-import random
+from password_generator import generate
+
 
 app = Flask(__name__)
 
-
-# TODO: formatting
-NUMBER_CHARACTERS = [number for number in "1234567890"]
-LOWERCASE_CHARACTERS = [letter for letter in "abcdefghijklmnopqrstuvwxyz"]
-UPPERCASE_CHARACTERS = [letter.upper() for letter in LOWERCASE_CHARACTERS]
-SYMBOL_CHARACTERS = [symbol for symbol in "~`!@#$%^&*()_-+={[}]|\:;\"'<,>.?/"]
 
 # Home page
 @app.route("/")
@@ -25,46 +20,63 @@ def landing():
     )
 
 
-@app.route("/generate")
-def generate():
+# Routes to this page after Generate Password is clicked
+@app.route("/generate", methods=["GET"])
+def generate_page():
+    # Only accept GET requests
     if request.method == "GET":
-        length = int(request.args.get("length"))
-        numbers = request.args.get("numbers")
+        # Get data from the input form
         lowercase = request.args.get("lowercase")
         uppercase = request.args.get("uppercase")
+        numbers = request.args.get("numbers")
         symbols = request.args.get("symbols")
-        if not numbers and not lowercase and not uppercase and not symbols:
-            # TODO: Format a proper error message
-            raise ValueError("At least one of the options must be selected")
-        possible_characters = []
-        if numbers:
-            possible_characters += NUMBER_CHARACTERS
-        if lowercase:
-            possible_characters += LOWERCASE_CHARACTERS
-        if uppercase:
-            possible_characters += UPPERCASE_CHARACTERS
-        if symbols:
-            possible_characters += SYMBOL_CHARACTERS
-
+        # Proper error formatting 
+        error = ""
+        password = ""
+        try:
+            # Ensure the length parameter is an integer
+            length = int(request.args.get("length"))
+        except ValueError:
+            error = "Password length must be an integer"
+            length = DEFAULT_LENGTH
+        else:
+            # Ensure length is within min/max range
+            if not 1 <= length <= 200:
+                error = "Password length must be between 1 and 200"
+            # Ensure at least one of the character options is used
+            elif not (lowercase or uppercase or numbers or symbols):
+                error = "Invalid Configuration: Must have at least one checkbox checked."
+            # All checks have passed, so we can generate a password with the given configuration
+            else:
+                password = generate.generate_password(
+                    length, lowercase, uppercase, numbers, symbols
+                )
         return render_template(
             "index.html",
-            password="".join(
-                [
-                    possible_characters[random.randint(0, len(possible_characters) - 1)]
-                    for _ in range(length)
-                ]
-            ),
             default_length=length,
             default_numbers=numbers,
             default_lowercase=lowercase,
             default_uppercase=uppercase,
             default_symbols=symbols,
+            password=password,
+            error=error,
         )
-    return render_template("index.html")
+    # Return the default page if we are sent a request other than GET
+    return render_template(
+        "index.html",
+        default_length=DEFAULT_LENGTH,
+        default_numbers=DEFAULT_NUMBERS,
+        default_lowercase=DEFAULT_LOWERCASE,
+        default_uppercase=DEFAULT_UPPERCASE,
+        default_symbols=DEFAULT_SYMBOLS,
+    )
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    # Create an argument parser to customise the default settings from the server.
+    parser = argparse.ArgumentParser(
+        description="A REST API to generate random passwords."
+    )
     parser.add_argument(
         "--default-length",
         type=int,
