@@ -1,30 +1,32 @@
+import argparse
 from flask import Flask, render_template, request
-from typing import Optional
+from waitress import serve
 import random
 
 app = Flask(__name__)
 
-DEFAULT_LENGTH = 10
-DEFAULT_NUMBERS = True
-DEFAULT_LOWERCASE = True
-DEFAULT_UPPERCASE = True
-DEFAULT_SYMBOLS = False
 
 # TODO: formatting
 NUMBER_CHARACTERS = [number for number in "1234567890"]
 LOWERCASE_CHARACTERS = [letter for letter in "abcdefghijklmnopqrstuvwxyz"]
 UPPERCASE_CHARACTERS = [letter.upper() for letter in LOWERCASE_CHARACTERS]
-SYMBOL_CHARACTERS = [symbol for symbol in "!@#$%^&*()_-+=/:;<>,.?'\"][}{"]
+SYMBOL_CHARACTERS = [symbol for symbol in "~`!@#$%^&*()_-+={[}]|\:;\"'<,>.?/"]
 
 # Home page
 @app.route("/")
 def landing():
-    return render_template("index.html", default_length=DEFAULT_LENGTH, default_numbers=DEFAULT_NUMBERS, default_lowercase=DEFAULT_LOWERCASE, default_uppercase=DEFAULT_UPPERCASE, default_symbols=DEFAULT_SYMBOLS)
+    return render_template(
+        "index.html",
+        default_length=DEFAULT_LENGTH,
+        default_numbers=DEFAULT_NUMBERS,
+        default_lowercase=DEFAULT_LOWERCASE,
+        default_uppercase=DEFAULT_UPPERCASE,
+        default_symbols=DEFAULT_SYMBOLS,
+    )
 
 
 @app.route("/generate")
-def generate(
-):
+def generate():
     if request.method == "GET":
         length = int(request.args.get("length"))
         numbers = request.args.get("numbers")
@@ -43,11 +45,7 @@ def generate(
             possible_characters += UPPERCASE_CHARACTERS
         if symbols:
             possible_characters += SYMBOL_CHARACTERS
-        print(f"Length: {length}")
-        print(f"Numbers: {numbers}")
-        print(f"Lowercase: {lowercase}")
-        print(f"Uppercase: {uppercase}")
-        print(f"Symbols: {symbols}")
+
         return render_template(
             "index.html",
             password="".join(
@@ -60,36 +58,44 @@ def generate(
             default_numbers=numbers,
             default_lowercase=lowercase,
             default_uppercase=uppercase,
-            default_symbols=symbols
+            default_symbols=symbols,
         )
     return render_template("index.html")
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--default-length",
+        type=int,
+        default=10,
+        help="Set the default generated password length.",
+    )
+    parser.add_argument(
+        "--disable-lowercase",
+        action="store_false",
+        help="Use this to set the default for including lowercase letters in the randomly generated password to False.",
+    )
+    parser.add_argument(
+        "--disable-uppercase",
+        action="store_false",
+        help="Use this to set the default for including uppercase letters in the randomly generated password to False.",
+    )
+    parser.add_argument(
+        "--disable-numbers",
+        action="store_false",
+        help="Use this to set the default for including numbers in the randomly generated password to False.",
+    )
+    parser.add_argument(
+        "--disable-symbols",
+        action="store_false",
+        help="Use this to set the default for including symbols in the randomly generated password to False.",
+    )
+    args = parser.parse_args()
 
-
-"""
-Create a REST API that will generate passwords on demand
-Subject to the following configurations
-    Password Length
-    Numbers flag (whether or not numbers are allowed in the password)
-    Lowercase chars flag (whether or not lowercase ascii characters are allowed)
-    Uppercase chars flag (whether or not lowercase ascii characters are allowed)
-    Special symbols flag (whether or not special symbols are allowed, like %$@)
-
-- Default password length and default flags are configurable from the server
-- Max Length: 200 characters
-- Raise an exception and return formatted response correspondibly in case a user makes a request with disabling all features
-- Cover all edge cases
-
-
-Layout:
-
-Title
-Generated Password
-Password Length: Slider? Dropdown? Type?
-Checkboxes for Flags (Numbers/Lowercase/Uppercase/Symbols)
-
-
-"""
+    DEFAULT_LENGTH = args.default_length
+    DEFAULT_LOWERCASE = args.disable_lowercase
+    DEFAULT_UPPERCASE = args.disable_uppercase
+    DEFAULT_NUMBERS = args.disable_numbers
+    DEFAULT_SYMBOLS = args.disable_symbols
+    serve(app, host="0.0.0.0", port=8080)

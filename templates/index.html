@@ -12,12 +12,9 @@
 <body>
     <h1>Hi Swisscom team! Welcome to my password generator</h1>
     <h3>By Kevin Esslinger</h3>
-
     <p>
         To generate a password, click the "Generate Password" button below.
-
     </p>
-
     <form id="generatePasswordButton" action="/generate" method="GET">
 
         <label for="lengthSlider">Password Length</label> 
@@ -51,16 +48,10 @@
         {% endif %}
         <label for="symbolFlag">Symbols?</label><br>
 
-        <input type="submit" id="generatePasswordButton" name ="generatePasswordButton">
-        <label for="generatePasswordButton">Generate Password</label>
+        <input type="submit" id="generatePasswordButton" name ="generatePasswordButton" value="Generate Password">
     </form>
 
     <h3>Your Password: {{ password }}</h3>
 </body>
-
 </html>
-
-
-
-
   
