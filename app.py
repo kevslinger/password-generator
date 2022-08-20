@@ -30,7 +30,7 @@ def generate_page():
         uppercase = request.args.get("uppercase")
         numbers = request.args.get("numbers")
         symbols = request.args.get("symbols")
-        # Proper error formatting 
+        # Proper error formatting
         error = ""
         password = ""
         try:
@@ -45,7 +45,9 @@ def generate_page():
                 error = "Password length must be between 1 and 200"
             # Ensure at least one of the character options is used
             elif not (lowercase or uppercase or numbers or symbols):
-                error = "Invalid Configuration: Must have at least one checkbox checked."
+                error = (
+                    "Invalid Configuration: Must have at least one checkbox checked."
+                )
             # All checks have passed, so we can generate a password with the given configuration
             else:
                 password = generate.generate_password(

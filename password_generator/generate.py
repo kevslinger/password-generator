@@ -3,7 +3,7 @@ import random
 NUMBER_CHARACTERS = list("1234567890")
 LOWERCASE_CHARACTERS = list("abcdefghijklmnopqrstuvwxyz")
 UPPERCASE_CHARACTERS = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-SYMBOL_CHARACTERS =  list("~`!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/")
+SYMBOL_CHARACTERS = list("~`!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/")
 
 
 def generate_password(

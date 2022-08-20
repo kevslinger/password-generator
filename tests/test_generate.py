@@ -11,11 +11,30 @@ from password_generator.generate import (
 @pytest.mark.parametrize(
     "length,lowercase,uppercase,numbers,symbols",
     [
+        (1, True, True, True, True),
+        (10, True, False, False, False),
+        (10, False, True, False, False),
+        (10, False, False, True, False),
+        (10, False, False, False, True),
+        (2000, True, True, True, True),
+    ],
+)
+def test_generate_password_correct_length(
+    length: int, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool
+):
+    assert length == len(
+        generate_password(length, lowercase, uppercase, numbers, symbols)
+    )
+
+
+@pytest.mark.parametrize(
+    "length,lowercase,uppercase,numbers,symbols",
+    [
         (10, False, False, False, False),
         (2000, False, False, False, False),
     ],
 )
-def test_generate_password_fails(
+def test_generate_password_no_checkboxes_selected(
     length: int, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool
 ):
     with pytest.raises(ValueError):
@@ -23,7 +42,8 @@ def test_generate_password_fails(
 
 
 @pytest.mark.parametrize(
-    "length,lowercase,uppercase,numbers,symbols", [(10, False, True, True, True), (200, False, True, True, True)]
+    "length,lowercase,uppercase,numbers,symbols",
+    [(10, False, True, True, True), (200, False, True, True, True)],
 )
 def test_generate_password_without_lowercase(
     length: int, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool
@@ -38,8 +58,10 @@ def test_generate_password_without_lowercase(
         == 0
     )
 
+
 @pytest.mark.parametrize(
-    "length,lowercase,uppercase,numbers,symbols", [(10, True, False, True, True), (200, True, False, True, True)]
+    "length,lowercase,uppercase,numbers,symbols",
+    [(10, True, False, True, True), (200, True, False, True, True)],
 )
 def test_generate_password_without_uppercase(
     length: int, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool
@@ -54,8 +76,10 @@ def test_generate_password_without_uppercase(
         == 0
     )
 
+
 @pytest.mark.parametrize(
-    "length,lowercase,uppercase,numbers,symbols", [(10, True, True, False, True), (200, True, True, False, True)]
+    "length,lowercase,uppercase,numbers,symbols",
+    [(10, True, True, False, True), (200, True, True, False, True)],
 )
 def test_generate_password_without_numbers(
     length: int, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool
@@ -70,8 +94,10 @@ def test_generate_password_without_numbers(
         == 0
     )
 
+
 @pytest.mark.parametrize(
-    "length,lowercase,uppercase,numbers,symbols", [(10, True, True, True, False), (200, True, True, True, False)]
+    "length,lowercase,uppercase,numbers,symbols",
+    [(10, True, True, True, False), (200, True, True, True, False)],
 )
 def test_generate_password_without_symbols(
     length: int, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool
