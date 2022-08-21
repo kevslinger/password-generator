@@ -35,7 +35,7 @@ To download the container, please ensure you have docker installed on your machi
 Then, use the command
 
 ```bash
-docker pull kevslinger/password-generator
+docker pull kevslinger/password-generator:main
 ```
 
 ### Build from Source
@@ -63,7 +63,7 @@ Now all required python dependencies have been included in the codebase.
 If you edit the source code and would like to rebuild the Docker container to include your latest changes, run the command
 
 ```bash
-docker build --tag kevslinger/password-generator .
+docker build --tag kevslinger/password-generator:main .
 ```
 
 ## Usage
@@ -74,7 +74,7 @@ You can run the password generation service from the Docker container or from yo
 
 To run the Docker container, you can use the following command
 ```bash
-docker run --publish 8080:8080 kevslinger/password-generator
+docker run --publish 8080:8080 kevslinger/password-generator:main
 ```
 
 This will map the Docker container's port 8080 to your port 8080 and allow you to connect to the service at http://127.0.0.1:8080.
