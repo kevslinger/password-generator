@@ -29,7 +29,10 @@ jobs:
     name: Push Docker image to Docker Hub
     needs: test
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     environment: docker-ci-workflow
+=======
+>>>>>>> 21f965b... Add GitHub action for CI/CD, update README to include workflow diagram and best practice section
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
